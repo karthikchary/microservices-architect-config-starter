@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  "zuul-api-gateway"
+  namespace: ms
+  labels:
+    app:  "zuul-api-gateway"
+spec:
+  selector:
+    matchLabels:
+      app: "zuul-api-gateway"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app:  "zuul-api-gateway"
+    spec:
+      containers:
+      - name:  "zuul-api-gateway"
+        image:  deekshithsn/zuul
+        ports:
+        - containerPort:  9999
+          name:  "zuul-api-gateway"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "zuul-service"
+  namespace: ms
+spec:
+  selector:
+    app: "zuul-service"
+  type: NodePort
+  ports:
+  - name: "zuul-service"
+    protocol: TCP
+    port: 9999
+    targetPort: 9999
+    nodePort: 32470
